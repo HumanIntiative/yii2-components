@@ -15,7 +15,7 @@ class ListStatusHistory extends Widget
 	 */
 	public $gridId = 'history-grid';
 	/**
-	 * @var GridView $gridview
+	 * @var GridView $gridView
 	 */
 	public $gridView = null;
 	/**
@@ -51,8 +51,8 @@ class ListStatusHistory extends Widget
 	{
 		parent::init();
 
-		if (is_null($this->gridview)) {
-			$this->gridview = new GridView;
+		if (is_null($this->gridView)) {
+			$this->gridView = new GridView;
 		}
 		if (is_null($this->serialColumnClass)) {
 			$this->serialColumnClass = SerialColumn::className();
@@ -61,7 +61,7 @@ class ListStatusHistory extends Widget
 
 	public function run()
 	{
-		return $this->gridview::widget([
+		return $this->gridView::widget([
 			'id'=>$this->gridId,
 			'dataProvider' => $this->dataProvider,
 			'columns' => $this->columns,

@@ -16,13 +16,17 @@ use yii\helpers\Url;
 class LocationDropdown extends Widget
 {
 	/**
-	 * @var yii\db\ActiveRecordInterface $model Location Model
+	 * @var yii\db\ActiveRecordInterface $locationModel Location Model
 	 */
-	public $model;
+	public $locationModel;
 	/**
 	 * @var yii\db\ActiveRecordInterface $countryModel Country Model
 	 */
 	public $countryModel;
+	/**
+	 * @var yii\db\ActiveRecordInterface $model
+	 */
+	public $model;
 	/**
 	 * @var string $attribure Model attribure
 	 */
@@ -105,8 +109,8 @@ class LocationDropdown extends Widget
 	{
 		parent::init();
 
-		$validLocation = ($this->model instanceof ActiveRecordInterface) 
-			&& strpos(get_class($this->model), 'Location');
+		$validLocation = ($this->locationModel instanceof ActiveRecordInterface) 
+			&& strpos(get_class($this->locationModel), 'Location');
 		$validCountry = ($this->countryModel instanceof ActiveRecordInterface)
 			&& strpos(get_class($this->countryModel), 'Country');
 
@@ -130,24 +134,24 @@ class LocationDropdown extends Widget
 		$val_attr2 = $this->model->{$this->attributeLocation2};
 		$val_attr3 = $this->model->{$this->attributeLocation3};
 
-		$dataLocation1 = $this->model::find()->where('parent_id=0')->all();
+		$dataLocation1 = $this->locationModel::find()->where('parent_id=0')->all();
 		$this->dataLocation1 = ArrayHelper::map($dataLocation1, 'id', 'location_name');
 
 		$this->dataLocation2 = [];
 		if (!empty($val_attr1)) {
-			$dataLocation2 = $this->model::find()->where(['parent_id'=>$val_attr1])->all();
+			$dataLocation2 = $this->locationModel::find()->where(['parent_id'=>$val_attr1])->all();
 			$this->dataLocation2 = ArrayHelper::map($dataLocation2, 'id', 'location_name');
 		}
 
 		$this->dataLocation3 = [];
 		if (!empty($val_attr2)) {
-			$dataLocation3 = $this->model::find()->where(['parent_id'=>$val_attr2])->all();
+			$dataLocation3 = $this->locationModel::find()->where(['parent_id'=>$val_attr2])->all();
 			$this->dataLocation3 = ArrayHelper::map($dataLocation3, 'id', 'location_name');
 		}
 
 		$this->dataLocation4 = [];
 		if (!empty($val_attr3)) {
-			$dataLocation4 = $this->model::find()->where(['parent_id'=>$val_attr3])->all();
+			$dataLocation4 = $this->locationModel::find()->where(['parent_id'=>$val_attr3])->all();
 			$this->dataLocation4 = ArrayHelper::map($dataLocation4, 'id', 'location_name');
 		}
 

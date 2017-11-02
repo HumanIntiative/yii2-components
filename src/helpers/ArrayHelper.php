@@ -21,6 +21,6 @@ class ArrayHelper extends YiiArrayHelper
 		return array_reduce($yearRange, function($retval, $year){
 			$retval[$year] = $year;
 			return $retval;
-		}, [''=>$this->placeholder]);
+		}, [''=>$placeholder]);
 	}
 }

@@ -3,7 +3,7 @@
 namespace pkpudev\components\widgets;
 
 use kartik\select2\Select2;
-use pkpudev\components\Select2AjaxOptions;
+use pkpudev\components\helpers\Select2Options;
 use yii\base\Widget;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\Html;
@@ -71,7 +71,7 @@ class DonaturDropdown extends Widget
 			'model'=>$this->model,
 			'attribute'=>$this->attribute,
 			'options'=>['placeholder'=>$placeholder],
-			'pluginOptions'=>Select2AjaxOptions::toArray([
+			'pluginOptions'=>Select2Options::toArray([
 				'url'=>$this->apiUrl,
 				'placeholder'=>$placeholder,
 				'idValue'=>$idValue,

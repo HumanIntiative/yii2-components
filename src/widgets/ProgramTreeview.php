@@ -109,7 +109,7 @@ class ProgramTreeview extends Widget
 	protected function createDropdown()
 	{
 		if ($this->useHierarchy && !empty($this->model->{$this->attribute}))
-			if (null !== ($program = Program::findOne($this->model->{$this->attribute})))
+			if (null !== ($program = $this->modelProgram::findOne($this->model->{$this->attribute})))
 				$this->fullHierarchy = $program->full_hierarchy;
 
 		$readonly = $this->readOnly ? ['readonly'=>'readonly'] : [];
@@ -166,7 +166,7 @@ class ProgramTreeview extends Widget
 
 	protected function registerJs()
 	{
-		$script = $this->jsCallback;
+		$script = (string)$this->jsCallback;
 		$this->view->addJsFuncReady($script);
 	}
 }
