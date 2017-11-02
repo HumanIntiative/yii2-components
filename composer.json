@@ -1,0 +1,24 @@
+{
+    "name": "pkpudev/yii2-components",
+    "description": "Yii2 Components for PKPU Dev Team",
+    "keywords": ["yii2", "extension", "components", "widgets"],
+    "type": "yii2-extension",
+    "require": {
+        "php": ">= 5.6",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "creocoder/yii2-flysystem": "0.8.*",
+        "phpoffice/phpspreadsheet": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zein Miftah",
+            "email": "zeinmiftah@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "pkpudev\\components\\": "src/"
+        }
+    }
+}
