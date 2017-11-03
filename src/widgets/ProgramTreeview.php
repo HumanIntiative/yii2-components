@@ -2,7 +2,6 @@
 
 namespace pkpudev\components\widgets;
 
-// use app\models\Program;
 use kartik\select2\Select2;
 use pkpudev\components\web\ViewBehavior;
 use yii\base\Widget;
@@ -92,7 +91,8 @@ class ProgramTreeview extends Widget
 	{
 		if (isset($this->dataProvider)) return $this->dataProvider;
 
-		$programs = $this->modelProgram::find()->activeNow();
+		$modelProgram = $this->modelProgram;
+		$programs = $modelProgram::find()->activeNow();
 		if ($this->isRamadhan) {
 			$programs->ramadhan();
 		}
@@ -108,8 +108,9 @@ class ProgramTreeview extends Widget
 
 	protected function createDropdown()
 	{
+		$modelProgram = $this->modelProgram;
 		if ($this->useHierarchy && !empty($this->model->{$this->attribute}))
-			if (null !== ($program = $this->modelProgram::findOne($this->model->{$this->attribute})))
+			if (null !== ($program = $modelProgram::findOne($this->model->{$this->attribute})))
 				$this->fullHierarchy = $program->full_hierarchy;
 
 		$readonly = $this->readOnly ? ['readonly'=>'readonly'] : [];

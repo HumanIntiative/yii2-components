@@ -134,30 +134,33 @@ class LocationDropdown extends Widget
 		$val_attr2 = $this->model->{$this->attributeLocation2};
 		$val_attr3 = $this->model->{$this->attributeLocation3};
 
-		$dataLocation1 = $this->locationModel::find()->where('parent_id=0')->all();
+		$locationModel = $this->locationModel;
+		$countryModel = $this->countryModel;
+
+		$dataLocation1 = $locationModel::find()->where('parent_id=0')->all();
 		$this->dataLocation1 = ArrayHelper::map($dataLocation1, 'id', 'location_name');
 
 		$this->dataLocation2 = [];
 		if (!empty($val_attr1)) {
-			$dataLocation2 = $this->locationModel::find()->where(['parent_id'=>$val_attr1])->all();
+			$dataLocation2 = $locationModel::find()->where(['parent_id'=>$val_attr1])->all();
 			$this->dataLocation2 = ArrayHelper::map($dataLocation2, 'id', 'location_name');
 		}
 
 		$this->dataLocation3 = [];
 		if (!empty($val_attr2)) {
-			$dataLocation3 = $this->locationModel::find()->where(['parent_id'=>$val_attr2])->all();
+			$dataLocation3 = $locationModel::find()->where(['parent_id'=>$val_attr2])->all();
 			$this->dataLocation3 = ArrayHelper::map($dataLocation3, 'id', 'location_name');
 		}
 
 		$this->dataLocation4 = [];
 		if (!empty($val_attr3)) {
-			$dataLocation4 = $this->locationModel::find()->where(['parent_id'=>$val_attr3])->all();
+			$dataLocation4 = $locationModel::find()->where(['parent_id'=>$val_attr3])->all();
 			$this->dataLocation4 = ArrayHelper::map($dataLocation4, 'id', 'location_name');
 		}
 
 		$this->dataCountry = [];
 		if ($this->useCountry) {
-			$dataCountry = $this->countryModel::find()->orderBy('country_name ASC')->all();
+			$dataCountry = $countryModel::find()->orderBy('country_name ASC')->all();
 			$this->dataCountry = ArrayHelper::map($dataCountry, 'id', 'country_name');
 		}
 	}

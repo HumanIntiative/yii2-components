@@ -15,7 +15,8 @@ class ViewBehavior extends \yii\base\Behavior
 	{
 		$rnd = rand(0, 1000);
 
-		$this->owner->registerJs($script, $this->owner::POS_READY, "js-func-{$rnd}");
+		$owner = $this->owner;
+		$this->owner->registerJs($script, $owner::POS_READY, "js-func-{$rnd}");
 	}
 
 	/**

@@ -79,12 +79,15 @@ class LocationData extends Behavior
 
 	public function loadLocation($event)
 	{
+		$countryModel = $this->countryModel;
+		$locationModel = $this->locationModel;
+
 		if (isset($this->owner->{$this->attrCountry}))
-			if (null !== ($country = $this->countryModel::findOne($this->owner->{$this->attrCountry})))
+			if (null !== ($country = $countryModel::findOne($this->owner->{$this->attrCountry})))
 				$this->_negara = $country->country_name;
 
 		if (empty($this->owner->{$this->attribute})) return;
-		if (null === ($location = $this->locationModel::findOne($this->owner->{$this->attribute}))) return;
+		if (null === ($location = $locationModel::findOne($this->owner->{$this->attribute}))) return;
 
 		$parent = $location;
 		while ($parent) {
@@ -105,14 +108,16 @@ class LocationData extends Behavior
 					$this->owner->{$this->attribute1} = $parent->{$this->_attributeId};
 					$this->_provinsi = $parent->{$this->_attributeName};
 			}
-			$parent = $this->locationModel::findOne($parent->{$this->_attributeParent});
+			$parent = $locationModel::findOne($parent->{$this->_attributeParent});
 		}
 	}
 
 	public function getLocation()
 	{
+		$locationModel = $this->locationModel;
+
 		if (empty($this->owner->{$this->attribute})) return;
-		if (null === ($location = $this->locationModel::findOne($this->owner->{$this->attribute}))) return;
+		if (null === ($location = $locationModel::findOne($this->owner->{$this->attribute}))) return;
 
 		$parent = $location;
 		while ($parent) {
@@ -129,7 +134,7 @@ class LocationData extends Behavior
 				case 2:
 					$provinsi = $parent->{$this->_attributeName};
 			}
-			$parent = $this->locationModel::findOne($parent->{$this->_attributeParent});
+			$parent = $locationModel::findOne($parent->{$this->_attributeParent});
 		}
 
 		switch ($location->{$this->_attributeLevel}) {

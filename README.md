@@ -20,3 +20,14 @@ or add
 ```
 
 to the require section of your `composer.json` file.
+
+Checking Compatibility
+------------
+
+Check for PHP 5.6
+
+```
+./vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 5.6 --extensions=php --report-full=report.txt --ignore=*/vendor/* .
+```
+
+Source [here](https://www.sitepoint.com/quick-intro-phpcompatibility-standard-for-phpcs-are-you-php7-ready/)

@@ -70,7 +70,7 @@ class FileUploader extends Component
 	 * @param string $prefix
 	 * @param FileModelInterface $fileModel
 	 */
-	public function upload(string $prefix, FileModelInterface $fileModel)
+	public function upload($prefix, FileModelInterface $fileModel)
 	{
 		// Or maybe throw Exception
 		if (!$this->isValid || empty($this->targetDir))
