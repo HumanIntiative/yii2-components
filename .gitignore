@@ -1,0 +1,4 @@
+/vendor
+composer.lock
+report.txt
+report_mp.txt

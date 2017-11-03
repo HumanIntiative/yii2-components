@@ -9,6 +9,10 @@
         "creocoder/yii2-flysystem": "0.8.*",
         "phpoffice/phpspreadsheet": "dev-master"
     },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*",
+        "wimg/php-compatibility": "*"
+    },
     "license": "MIT",
     "authors": [
         {
@@ -20,5 +24,9 @@
         "psr-4": {
             "pkpudev\\components\\": "src/"
         }
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wimg/php-compatibility",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wimg/php-compatibility"
     }
 }

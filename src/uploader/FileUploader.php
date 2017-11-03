@@ -46,7 +46,11 @@ class FileUploader extends Component
 	 */
 	protected $webroot;
 
-	public function __construct(ActiveRecordInterface $model, string $attribute)
+	/**
+	 * @param ActiveRecordInterface $model
+	 * @param string $attribute
+	 */
+	public function __construct(ActiveRecordInterface $model, $attribute)
 	{
 		$this->model      = $model;
 		$this->attribute  = $attribute;
@@ -62,6 +66,10 @@ class FileUploader extends Component
 		}
 	}
 
+	/**
+	 * @param string $prefix
+	 * @param FileModelInterface $fileModel
+	 */
 	public function upload(string $prefix, FileModelInterface $fileModel)
 	{
 		// Or maybe throw Exception
