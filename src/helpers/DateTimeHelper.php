@@ -56,11 +56,12 @@ class DateTimeHelper extends Object
 	 */
 	public static function getHolidays($year, $month)
 	{
-		if (!(static::$model instanceof ActiveRecordInterface)) {
+		$model = static::$model;
+		if (!($model instanceof ActiveRecordInterface)) {
 			throw new \yii\base\InvalidConfigException("Model Holiday not found");
 		}
 
-		$rows = static::$model::find()
+		$rows = $model::find()
 			->where('EXTRACT(YEAR FROM holiday_date)::INTEGER='.$year)
 			->andWhere('EXTRACT(MONTH FROM holiday_date)::INTEGER='.$month)
 			->all();
