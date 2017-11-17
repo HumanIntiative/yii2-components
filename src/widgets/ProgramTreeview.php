@@ -3,9 +3,9 @@
 namespace pkpudev\components\widgets;
 
 use kartik\select2\Select2;
+use pkpudev\components\data\QueryCollection;
 use pkpudev\components\web\ViewBehavior;
 use yii\base\Widget;
-use yii\data\BaseDataProvider;
 use yii\db\ActiveRecordInterface;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -33,7 +33,7 @@ class ProgramTreeview extends Widget
 	 */
 	public $colspanText = 'col-sm-10';
 	/**
-	 * @var BaseDataProvider $dataProvider
+	 * @var QueryCollection $dataProvider
 	 */
 	public $dataProvider = null;
 	/**
@@ -56,6 +56,10 @@ class ProgramTreeview extends Widget
 	 * @var bool $useHierarchy
 	 */
 	public $useHierarchy = true;
+	/**
+	 * @var bool $multiple
+	 */
+	public $multiple = false;
 
 	/**
 	 * @var string $fullHierarchy
@@ -70,10 +74,11 @@ class ProgramTreeview extends Widget
 	{
 		parent::init();
 
-		$validSource = ($this->dataProvider instanceof BaseDataProvider) ||
-			(($this->modelProgram instanceof ActiveRecordInterface) && strpos(get_class($this->modelProgram), 'Program'));
+		$validDataProvider = ($this->dataProvider instanceof QueryCollection);
+		$validModel = ($this->modelProgram instanceof ActiveRecordInterface) &&
+			strpos(get_class($this->modelProgram), 'Program');
 
-		if (!$validSource) {
+		if (!$validDataProvider && !$validModel) {
 			throw new \yii\base\InvalidConfigException("Data Source is invalid");
 		}
 
@@ -109,7 +114,7 @@ class ProgramTreeview extends Widget
 	protected function createDropdown()
 	{
 		$modelProgram = $this->modelProgram;
-		if ($this->useHierarchy && !empty($this->model->{$this->attribute}))
+		if ($this->useHierarchy && !empty($this->model->{$this->attribute}) && !isset($this->dataProvider))
 			if (null !== ($program = $modelProgram::findOne($this->model->{$this->attribute})))
 				$this->fullHierarchy = $program->full_hierarchy;
 
@@ -125,8 +130,12 @@ class ProgramTreeview extends Widget
 			'options' => ArrayHelper::merge($readonly, [
 				'id' => $this->id,
 				'prompt' => '--- Pilih Program ---',
+				'multiple' => $this->multiple,
 			]),
-			'pluginOptions' => ['allowClear'=>true],
+			'pluginOptions' => [
+				'allowClear'=>true,
+				'maximumSelectionLength'=>10,
+			],
 		]);
 		$errorBlock = Html::error($this->model, $this->attribute, [
 			'class'=>'help-block error'

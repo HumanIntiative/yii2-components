@@ -32,17 +32,18 @@ class QueryCollection extends Object implements \IteratorAggregate, \Countable
 	public function map(callable $callback)
 	{
 		$this->data = array_map($callback, $this->data);
-		return $this->data;
+		return $this;
 	}
 
 	public function filter(callable $callback)
 	{
 		$this->data = array_filter($this->data, $callback);
-		return $this->data;
+		return $this;
 	}
 
 	public function reduce(callable $callback, $initial=null)
 	{
-		return array_reduce($this->data, $callback, $initial);
+		$this->data = array_reduce($this->data, $callback, $initial);
+		return $this;
 	}
 }

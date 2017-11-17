@@ -10,6 +10,8 @@ class DateTimeHelper extends Object
 	const DECEMBER = 12;
 	const N_SATURDAY = 6;
 	const N_SUNDAY = 7;
+	const HOUR_TICKS = 3600;
+	const MINUTE_TICKS = 60;
 
 	/**
 	 * @var ActiveRecordInterface $model Holiday model
@@ -94,5 +96,22 @@ class DateTimeHelper extends Object
 			$index = ($interval-1);
 		}
 		return $workDays[$index];
+	}
+
+	public static function diffForHuman($seconds)
+	{
+		$hours = (int)($seconds / static::HOUR_TICKS);
+		$seconds -= ($hours * static::HOUR_TICKS);
+		$minutes = (int)($seconds / static::MINUTE_TICKS);
+		$seconds -= ($minutes * static::MINUTE_TICKS);
+
+		if ($hours>0) {
+			return "{$hours} jam {$minutes} menit {$seconds} detik";
+		} elseif ($minutes>0) {
+			return "{$minutes} menit {$seconds} detik";
+		} elseif ($seconds>0) {
+			return "{$seconds} detik";
+		}
+		return null;
 	}
 }
