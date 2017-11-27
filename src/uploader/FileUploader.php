@@ -49,16 +49,18 @@ class FileUploader extends Component
 	/**
 	 * @param ActiveRecordInterface $model
 	 * @param string $attribute
+	 * @param bool $isOneInstance
 	 */
-	public function __construct(ActiveRecordInterface $model, $attribute)
+	public function __construct(ActiveRecordInterface $model, $attribute, $isOneInstance=true)
 	{
-		$this->model      = $model;
-		$this->attribute  = $attribute;
+		$this->model         = $model;
+		$this->attribute     = $attribute;
+		$this->isOneInstance = $isOneInstance;
 
 		$this->webroot = \Yii::getAlias('webroot');
 		if ($this->isOneInstance) {
 			$file = UploadedFile::getInstance($this->model, $this->attribute);
-			$this->files = [$this->file];
+			$this->files = [$file];
 			$this->isValid = $file instanceof UploadedFile;
 		} else {
 			$this->files = UploadedFile::getInstances($this->model, $this->attribute);

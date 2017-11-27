@@ -6,6 +6,7 @@ use kartik\select2\Select2;
 use pkpudev\components\helpers\Select2Options;
 use yii\base\Widget;
 use yii\db\ActiveRecordInterface;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\JsExpression;
 
@@ -61,21 +62,27 @@ class DonaturDropdown extends Widget
 	{
 		$idValue = $this->model->{$this->attribute};
 
-		if (null === ($donatur = $this->model->donatur)) {
+		/*if (null === ($donatur = $this->model->donatur)) {
 			$placeholder = $this->placeholder;
 		} else {
 			$placeholder = (object)['id'=>$idValue, 'text'=>$donatur->full_name];
-		}
+		}*/
+		$placeholder = '--- Pilih '.$this->model->getAttributeLabel($this->attribute).' ---';
+		$options = $idValue ? [
+			'codeValue'=>$this->model->donatur->donor_no,
+			'textValue'=>$this->model->donatur->full_name,
+		] : [];
 
 		return Select2::widget([
 			'model'=>$this->model,
 			'attribute'=>$this->attribute,
 			'options'=>['placeholder'=>$placeholder],
-			'pluginOptions'=>Select2Options::toArray([
+			'pluginOptions'=>Select2Options::toArray(ArrayHelper::merge($options, [
 				'url'=>$this->apiUrl,
 				'placeholder'=>$placeholder,
 				'idValue'=>$idValue,
 				'codeField'=>'no',
+				'textField'=>'full_name',
 				'ajax'=>[
 					'delay'=>250,
 					'type'=>'GET',
@@ -87,13 +94,13 @@ class DonaturDropdown extends Widget
 						jQuery.each(data, function (index, item) {
 							results.push({
 								id: item.id,
-								text: item.text
+								text: item.full_name
 							})
 						})
 						return { results: results }
 					}'),
 				],
-			]),
+			])),
 		]);
 	}
 
