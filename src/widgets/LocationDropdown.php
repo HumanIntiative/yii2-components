@@ -190,13 +190,24 @@ class LocationDropdown extends Widget
 
 	public function registerJs()
 	{
-		$script = 'var rebuildSelect2 = function(selector, data, placeholder) {
+		$script = '
+		Array.prototype.clone = function() {
+			return this.slice(0);
+		};
+
+		var rebuildSelect2 = function(selector, data, placeholder) {
 			var options = { allowClear:true, data:data, language:"id", placeholder:placeholder, theme:"krajee", width:"100%" };
 			var selectorId = "#" + selector;
 
 			jQuery(selectorId).select2("destroy");
 			jQuery(selectorId).html("");
 			jQuery.when(jQuery(selectorId).select2(options)).done(initS2Loading(selector, "s2options_d6851687"));
+		};
+
+		var addPlaceHolder = function(data, placeholder) {
+			var newdata = data.clone();
+			newdata.unshift({id: "", text: ""});
+			return newdata;
 		};
 
 		jQuery("#country_id").on("change", function(e){
@@ -216,6 +227,7 @@ class LocationDropdown extends Widget
 				dataType: "json",
 				data: { Location: { lev:3, parent_id:val } },
 				success: function(data, st, xhr) {
+					data = addPlaceHolder(data, "")
 					rebuildSelect2("location_id_2", data, "--- Pilih Kota/Kabupaten ---");
 					rebuildSelect2("location_id_3", [], "--- Pilih Kecamatan ---");
 					rebuildSelect2("location_id_4", [], "--- Pilih Kelurahan/Desa ---");
@@ -231,6 +243,7 @@ class LocationDropdown extends Widget
 				dataType: "json",
 				data: { Location: { lev:4, parent_id:val } },
 				success: function(data, st, xhr) {
+					data = addPlaceHolder(data, "")
 					rebuildSelect2("location_id_3", data, "--- Pilih Kecamatan ---");
 					rebuildSelect2("location_id_4", [], "--- Pilih Kelurahan/Desa ---");
 				}
@@ -245,6 +258,7 @@ class LocationDropdown extends Widget
 				dataType: "json",
 				data: { Location: { lev:5, parent_id:val } },
 				success: function(data, st, xhr) {
+					data = addPlaceHolder(data, "")
 					rebuildSelect2("location_id_4", data, "--- Pilih Kelurahan/Desa ---");
 				}
 			})
