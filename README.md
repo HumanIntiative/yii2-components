@@ -31,3 +31,15 @@ Check for PHP 5.6
 ```
 
 Source [here](https://www.sitepoint.com/quick-intro-phpcompatibility-standard-for-phpcs-are-you-php7-ready/)
+
+Installing PHPUnit
+------------
+
+Install phar version of phpunit locally
+
+```
+wget https://phar.phpunit.de/phpunit-<version>.phar
+chmod +x phpunit-6.4.phar
+mv phpunit-6.4.phar phpunit
+./phpunit --version
+```

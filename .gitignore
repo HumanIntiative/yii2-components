@@ -1,4 +1,5 @@
 /vendor
 composer.lock
+phpunit
 report.txt
 report_mp.txt

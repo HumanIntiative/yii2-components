@@ -41,10 +41,6 @@ class FileUploader extends Component
 	 * @var bool
 	 */
 	protected $isValid = false;
-	/**
-	 * @var string
-	 */
-	protected $webroot;
 
 	/**
 	 * @param ActiveRecordInterface $model
@@ -57,7 +53,6 @@ class FileUploader extends Component
 		$this->attribute     = $attribute;
 		$this->isOneInstance = $isOneInstance;
 
-		$this->webroot = \Yii::getAlias('webroot');
 		if ($this->isOneInstance) {
 			$file = UploadedFile::getInstance($this->model, $this->attribute);
 			$this->files = [$file];
@@ -80,11 +75,11 @@ class FileUploader extends Component
 
 		$retval = true;
 		foreach ($this->files as $uploaded) {
-			if ($uploaded != UPLOAD_ERR_OK) continue;
+			if ($uploaded->error != UPLOAD_ERR_OK) continue;
 
 			$stream = fopen($uploaded->tempName, 'r+');
 			$filename = "{$prefix}_{$uploaded->name}";
-			$fullpath = "{$this->webroot}{$this->targetDir}/{$filename}";
+			$fullpath = "{$this->targetDir}/{$filename}";
 			$result = $this->fileSystem->writeStream($fullpath, $stream);
 			fclose($stream);
 
