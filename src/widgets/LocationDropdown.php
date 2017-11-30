@@ -213,9 +213,9 @@ class LocationDropdown extends Widget
 		jQuery("#country_id").on("change", function(e){
 			var country = jQuery(this);
 			if (country.val()==100) { //Indonesia
-				jQuery(".id_area").hide(500);
-			} else {
 				jQuery(".id_area").show(500);
+			} else {
+				jQuery(".id_area").hide(500);
 			}
 		});
 
@@ -297,10 +297,15 @@ class LocationDropdown extends Widget
 			$dropdown .= 'Negara';
 			$dropdown .= ($isRequired ? Html::tag('span', '*', ['class'=>'required']) : null);
 			$dropdown .= Html::endTag('div');
-			$dropdown .= Html::activeDropDownList($this->model, $this->attributeCountry, $this->dataCountry, [
-				'id'=>'country_id',
-				'class'=>'col-sm-2 form-control select2',
-				'prompt'=>'-- Pilih Negara (Jika Luar Negeri) --',
+			$dropdown .= Select2::widget([
+				'model'=>$this->model,
+				'attribute'=>$this->attributeCountry,
+				'data'=>$this->dataCountry,
+				'options'=>[
+					'id'=>'country_id',
+					'prompt'=>'--- Pilih Negara (Jika Luar Negeri) ---',
+				],
+				'pluginOptions'=>['allowClear'=>true],
 			]);
 		}
 		return $dropdown;
