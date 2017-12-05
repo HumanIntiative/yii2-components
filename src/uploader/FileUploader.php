@@ -5,6 +5,7 @@ namespace pkpudev\components\uploader;
 use creocoder\flysystem\Filesystem;
 use yii\base\Component;
 use yii\db\ActiveRecordInterface;
+use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
 
 class FileUploader extends Component
@@ -64,30 +65,38 @@ class FileUploader extends Component
 	}
 
 	/**
+	 * @return bool Is valid file uploaded
+	 */
+	public function getIsValid()
+	{
+		return $this->isValid;
+	}
+
+	/**
 	 * @param string $prefix
 	 * @param FileModelInterface $fileModel
 	 */
 	public function upload($prefix, FileModelInterface $fileModel)
 	{
 		// Or maybe throw Exception
-		if (!$this->isValid || empty($this->targetDir))
-			throw new \yii\base\InvalidConfigException("Error Initialize FileUploader");
+		if (!$this->isValid || empty($this->targetDir)) {
+			throw new \yii\base\InvalidConfigException("Error Init FileUploader, {$this->attribute}");
+		}
 
-		$retval = true;
+		$retval = false;
 		foreach ($this->files as $uploaded) {
 			if ($uploaded->error != UPLOAD_ERR_OK) continue;
 
 			$stream = fopen($uploaded->tempName, 'r+');
 			$filename = "{$prefix}_{$uploaded->name}";
 			$fullpath = "{$this->targetDir}/{$filename}";
-			$result = $this->fileSystem->writeStream($fullpath, $stream);
+			$result = $this->fileSystem->putStream($fullpath, $stream); //write or update
 			fclose($stream);
 
-			if ($result) {
-				$result = $fileModel->saveFiles($uploaded, $filename, $this->targetDir, $this->type);
-				$retval = $retval && $result;
+			if ($retval = $this->fileSystem->has($fullpath)) {
+				$retval = $fileModel->saveFile($uploaded, $filename, $this->targetDir, $this->type);
 			} else {
-				$retval = false;
+				throw new ServerErrorHttpException("Gagal menyimpan file", 500);
 			}
 		}
 		return $retval;
