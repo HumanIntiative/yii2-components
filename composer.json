@@ -7,7 +7,7 @@
         "php": ">= 5.6",
         "kartik-v/yii2-widget-select2": "@dev",
         "creocoder/yii2-flysystem": "0.8.*",
-        "phpoffice/phpspreadsheet": "dev-master"
+        "phpoffice/phpspreadsheet": "1.0.0-beta2"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
