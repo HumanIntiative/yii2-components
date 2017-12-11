@@ -2,12 +2,12 @@
 
 namespace pkpudev\components\helpers;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Formatter for Number and Numeric
  */
-class NumberHelper extends Object
+class NumberHelper extends BaseObject
 {
 	/**
 	 * @param string $value The amount of money

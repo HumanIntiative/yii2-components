@@ -64,9 +64,17 @@ class LocationDropdown extends Widget
 	 */
 	public $attributeLocation4 = 'location_id_4';
 	/**
+	 * @var string $attributeSalt For two or more dropdowns per page
+	 */
+	public $attributeSalt = 'd5x7y3z0f1';
+	/**
 	 * @var string $colspanText Class name for label grid
 	 */
 	public $colspanText = 'col-sm-6';
+	/**
+	 * @var string $colspanLabel Class name for label grid
+	 */
+	public $colspanLabel = 'col-md-3';
 	/**
 	 * @var bool $useCountry If you want to use country input
 	 */
@@ -168,7 +176,7 @@ class LocationDropdown extends Widget
 	public function createDropdown()
 	{
 		$activeLabel = Html::activeLabel($this->model, $this->attribute, [
-			'class'=>'control-label '.($this->isHorizontal?'col-md-2':null),
+			'class'=>'control-label '.($this->isHorizontal?$this->colspanLabel:null),
 			'required'=>$this->model->isAttributeRequired($this->attribute),
 		]);
 		$dropdown = $this->selectCountry() .
@@ -219,7 +227,7 @@ class LocationDropdown extends Widget
 			}
 		});
 
-		jQuery("#location_id_1").on("change", function(){
+		jQuery("#'.$this->attr_location1_id.'").on("change", function(){
 			var val = jQuery(this).val();
 			jQuery.ajax({
 				type: "'.$this->apiRequestType.'",
@@ -228,14 +236,14 @@ class LocationDropdown extends Widget
 				data: { Location: { lev:3, parent_id:val } },
 				success: function(data, st, xhr) {
 					data = addPlaceHolder(data, "")
-					rebuildSelect2("location_id_2", data, "--- Pilih Kota/Kabupaten ---");
-					rebuildSelect2("location_id_3", [], "--- Pilih Kecamatan ---");
-					rebuildSelect2("location_id_4", [], "--- Pilih Kelurahan/Desa ---");
+					rebuildSelect2("'.$this->attr_location2_id.'", data, "--- Pilih Kota/Kabupaten ---");
+					rebuildSelect2("'.$this->attr_location3_id.'", [], "--- Pilih Kecamatan ---");
+					rebuildSelect2("'.$this->attr_location4_id.'", [], "--- Pilih Kelurahan/Desa ---");
 				}
 			})
 		});
 
-		jQuery("#location_id_2").on("change", function(){
+		jQuery("#'.$this->attr_location2_id.'").on("change", function(){
 			var val = jQuery(this).val();
 			jQuery.ajax({
 				type: "'.$this->apiRequestType.'",
@@ -244,13 +252,13 @@ class LocationDropdown extends Widget
 				data: { Location: { lev:4, parent_id:val } },
 				success: function(data, st, xhr) {
 					data = addPlaceHolder(data, "")
-					rebuildSelect2("location_id_3", data, "--- Pilih Kecamatan ---");
-					rebuildSelect2("location_id_4", [], "--- Pilih Kelurahan/Desa ---");
+					rebuildSelect2("'.$this->attr_location3_id.'", data, "--- Pilih Kecamatan ---");
+					rebuildSelect2("'.$this->attr_location4_id.'", [], "--- Pilih Kelurahan/Desa ---");
 				}
 			})
 		});
 
-		jQuery("#location_id_3").on("change", function(){
+		jQuery("#'.$this->attr_location3_id.'").on("change", function(){
 			var val = jQuery(this).val();
 			jQuery.ajax({
 				type: "'.$this->apiRequestType.'",
@@ -259,7 +267,7 @@ class LocationDropdown extends Widget
 				data: { Location: { lev:5, parent_id:val } },
 				success: function(data, st, xhr) {
 					data = addPlaceHolder(data, "")
-					rebuildSelect2("location_id_4", data, "--- Pilih Kelurahan/Desa ---");
+					rebuildSelect2("'.$this->attr_location4_id.'", data, "--- Pilih Kelurahan/Desa ---");
 				}
 			})
 		});';
@@ -285,6 +293,26 @@ class LocationDropdown extends Widget
 				$dropdown .
 				$errorBlock . 
 			Html::endTag('div');
+	}
+
+	protected function getAttr_location1_id()
+	{
+		return $this->attributeLocation1 . $this->attributeSalt;
+	}
+
+	protected function getAttr_location2_id()
+	{
+		return $this->attributeLocation2 . $this->attributeSalt;
+	}
+
+	protected function getAttr_location3_id()
+	{
+		return $this->attributeLocation3 . $this->attributeSalt;
+	}
+
+	protected function getAttr_location4_id()
+	{
+		return $this->attributeLocation4 . $this->attributeSalt;
 	}
 
 	protected function selectCountry()
@@ -336,7 +364,7 @@ class LocationDropdown extends Widget
 				'attribute'=>$this->attributeLocation1,
 				'data'=>$this->dataLocation1,
 				'options'=>[
-					'id'=>$this->attributeLocation1,
+					'id'=>$this->attr_location1_id,
 					'prompt'=>'--- Pilih Provinsi ---',
 				],
 				'pluginOptions'=>['allowClear'=>true],
@@ -354,7 +382,7 @@ class LocationDropdown extends Widget
 				'attribute'=>$this->attributeLocation2,
 				'data'=>$this->dataLocation2,
 				'options'=>[
-					'id'=>$this->attributeLocation2,
+					'id'=>$this->attr_location2_id,
 					'prompt'=>'--- Pilih Kota/Kabupaten ---',
 				],
 				'pluginOptions'=>['allowClear'=>true],
@@ -372,7 +400,7 @@ class LocationDropdown extends Widget
 				'attribute'=>$this->attributeLocation3,
 				'data'=>$this->dataLocation3,
 				'options'=>[
-					'id'=>$this->attributeLocation3,
+					'id'=>$this->attr_location3_id,
 					'prompt'=>'--- Pilih Kecamatan ---',
 				],
 				'pluginOptions'=>['allowClear'=>true],
@@ -390,7 +418,7 @@ class LocationDropdown extends Widget
 				'attribute'=>$this->attributeLocation4,
 				'data'=>$this->dataLocation4,
 				'options'=>[
-					'id'=>$this->attributeLocation4,
+					'id'=>$this->attr_location4_id,
 					'prompt'=>'--- Pilih Kelurahan/Desa ---',
 				],
 				'pluginOptions'=>['allowClear'=>true],

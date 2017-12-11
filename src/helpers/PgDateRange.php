@@ -2,12 +2,12 @@
 
 namespace pkpudev\components\helpers;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Formatter for Postgres Daterange data type
  */
-class PgDateRange extends Object
+class PgDateRange extends BaseObject
 {
 	/**
 	 * @var string $first_date First Date

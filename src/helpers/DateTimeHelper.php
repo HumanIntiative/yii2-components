@@ -2,10 +2,10 @@
 
 namespace pkpudev\components\helpers;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\db\ActiveRecordInterface;
 
-class DateTimeHelper extends Object
+class DateTimeHelper extends BaseObject
 {
 	const DECEMBER = 12;
 	const N_SATURDAY = 6;

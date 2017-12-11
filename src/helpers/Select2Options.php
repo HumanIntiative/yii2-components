@@ -2,7 +2,7 @@
 
 namespace pkpudev\components\helpers;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\web\JsExpression;
 
 /**
@@ -22,7 +22,7 @@ use yii\web\JsExpression;
  * ]);
  * ```
  */
-class Select2Options extends Object
+class Select2Options extends BaseObject
 {
 	/**
 	 * @var bool $allowClear

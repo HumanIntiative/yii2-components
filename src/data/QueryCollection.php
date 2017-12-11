@@ -2,10 +2,10 @@
 
 namespace pkpudev\components\data;
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\db\ActiveQueryInterface;
 
-class QueryCollection extends Object implements \IteratorAggregate, \Countable
+class QueryCollection extends BaseObject implements \IteratorAggregate, \Countable
 {
 	protected $data;
 
