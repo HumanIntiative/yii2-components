@@ -3,13 +3,13 @@
 namespace pkpudev\components\data;
 
 use yii\base\BaseObject;
-use yii\db\ActiveQueryInterface;
+use yii\db\QueryInterface;
 
 class QueryCollection extends BaseObject implements \IteratorAggregate, \Countable
 {
 	protected $data;
 
-	public function __construct(ActiveQueryInterface $query)
+	public function __construct(QueryInterface $query)
 	{
 		$this->data = $query->all();
 	}
