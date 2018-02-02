@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooterDrawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Writer\Excel5 as ExcelWriter;
+use PhpOffice\PhpSpreadsheet\Writer\Xls as ExcelWriter;
 use yii\base\Component;
 
 class ArrayDataToExcel extends Component
