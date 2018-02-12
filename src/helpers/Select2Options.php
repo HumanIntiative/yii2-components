@@ -14,7 +14,7 @@ use yii\web\JsExpression;
  * $form->field($model, 'project_id')->widget(Select2::classname(), [
  *   'options'=>compact('placeholder'),
  *   'pluginOptions'=>Select2Options::toArray(ArrayHelper::merge($options, [
- *     'url'=>Url::to('api/project', true),
+ *     'url'=>Url::to(['api/project'], 'https'),
  *     'placeholder'=>$placeholder,
  *     'codeField'=>'project_no',
  *     'idValue'=>$model->project_id,

@@ -66,6 +66,7 @@ class PgDateRange extends BaseObject
 	public static function toWidget($value)
 	{
 		if (is_null($value)) return null;
+		if (static::isNull($value)) return null;
 
 		$dtrange = static::parseRange($value);
 
