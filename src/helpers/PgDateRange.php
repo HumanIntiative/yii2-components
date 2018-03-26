@@ -9,6 +9,9 @@ use yii\base\BaseObject;
  */
 class PgDateRange extends BaseObject
 {
+	const NULL_VALUES = ['(,)', '[,)', '(,]', '[,]'];
+	const DEFAULT_VALUE = '(,)';
+
 	/**
 	 * @var string $first_date First Date
 	 */
@@ -40,12 +43,14 @@ class PgDateRange extends BaseObject
 	public static function isNull($value)
 	{
 		if (is_null($value)) return true;
-		if ($value == '(,)') return true;
+		if (in_array($value, static::NULL_VALUES)) return true;
 		return false;
 	}
 
 	public static function toSQL($value)
 	{
+		if (static::isNull($value)) return static::DEFAULT_VALUE;
+
 		$maps = array_map(function($value) {
 			return empty($value) ? null : "'$value'";
 		}, explode(' - ', $value));
