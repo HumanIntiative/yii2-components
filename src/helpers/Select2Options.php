@@ -82,9 +82,9 @@ class Select2Options extends BaseObject
 			"{id:0, $codeField:'---', text:' $placeholder ---'}";
 
 		/* allowClear */
-		$this->allowClear = $this->allowClear ?: true;
+		$this->allowClear = $config['allowClear'] ?: true;
 		/* ajax */
-		$this->ajax = $this->ajax ?: [
+		$this->ajax = $config['ajax'] ?: [
 			'url'            => $config['url'],
 			'delay'          => $config['ajax.delay'] ?: 250,
 			'dataType'       => $config['ajax.dataType'] ?: 'json',
@@ -103,23 +103,23 @@ class Select2Options extends BaseObject
 		/* minimumInputLength */
 		$this->minimumInputLength = $config['minLength'] ?: 3;
 		/* templateResult */
-		$this->templateResult = $this->templateResult ?: new JsExpression("function(p) {
+		$this->templateResult = $config['templateResult'] ?: new JsExpression("function(p) {
 			if (p.loading) {
 				return p.text
 			}
 			return jQuery('' + p.text + '')
 		}");
 		/* templateSelection */
-		$this->templateSelection = $this->templateSelection ?: new JsExpression("function(p) {
+		$this->templateSelection = $config['templateSelection'] ?: new JsExpression("function(p) {
 			if (p.text) {
 				jQuery('' + p.text + '')
 			}
 			return p.text
 		}");
 		/* escapeMarkup */
-		$this->escapeMarkup = $this->escapeMarkup ?: new JsExpression("function (markup) { return markup }");
+		$this->escapeMarkup = $config['escapeMarkup'] ?: new JsExpression("function (markup) { return markup }");
 		/* initSelection */
-		$this->initSelection = $this->initSelection ?: new JsExpression("function (element, callback) {
+		$this->initSelection = $config['initSelection'] ?: new JsExpression("function (element, callback) {
 			callback({$callbackOptions})
 		}");
 	}
