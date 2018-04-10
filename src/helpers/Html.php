@@ -2,7 +2,6 @@
 
 namespace pkpudev\components\helpers;
 
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html as YiiHtml;
 use yii\web\JsExpression;
 
