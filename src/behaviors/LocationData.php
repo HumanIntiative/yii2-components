@@ -61,21 +61,21 @@ class LocationData extends Behavior
 
 	public function beforeValidate($event)
 	{
-		if (\Yii::$app instanceof \yii\console\Application) return;
+		if (\Yii::$app instanceof \yii\web\Application) {
+			$modelName = (new \ReflectionClass($this->owner))->getShortName();
+			$post = \Yii::$app->request->post($modelName);
 
-		$modelName = (new \ReflectionClass($this->owner))->getShortName();
-		$post = \Yii::$app->request->post($modelName);
-
-		if ($attr4 = $post[$this->attribute4]) { // Kelurahan
-			$this->owner->{$this->attribute} = $attr4;
-		} elseif ($attr3 = $post[$this->attribute3]) { // Kecamatan
-			$this->owner->{$this->attribute} = $attr3;
-		} elseif ($attr2 = $post[$this->attribute2]) { // Kabupaten
-			$this->owner->{$this->attribute} = $attr2;
-		} elseif ($attr1 = $post[$this->attribute1]) { // Provinsi
-			$this->owner->{$this->attribute} = $attr1;
-		} else {
-			$this->owner->{$this->attribute} = null;
+			if ($attr4 = $post[$this->attribute4]) { // Kelurahan
+				$this->owner->{$this->attribute} = $attr4;
+			} elseif ($attr3 = $post[$this->attribute3]) { // Kecamatan
+				$this->owner->{$this->attribute} = $attr3;
+			} elseif ($attr2 = $post[$this->attribute2]) { // Kabupaten
+				$this->owner->{$this->attribute} = $attr2;
+			} elseif ($attr1 = $post[$this->attribute1]) { // Provinsi
+				$this->owner->{$this->attribute} = $attr1;
+			} else {
+				$this->owner->{$this->attribute} = null;
+			}
 		}
 	}
 
