@@ -61,6 +61,8 @@ class LocationData extends Behavior
 
 	public function beforeValidate($event)
 	{
+		if (\Yii::$app instanceof \yii\console\Application) return;
+
 		$modelName = (new \ReflectionClass($this->owner))->getShortName();
 		$post = \Yii::$app->request->post($modelName);
 
