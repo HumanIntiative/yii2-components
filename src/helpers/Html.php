@@ -56,12 +56,12 @@ class Html extends YiiHtml
 	 * @param string $title
 	 * @param array $options
 	 */	
-	public static function saveAndCancelButton($title, $options=[])
+	public static function saveAndCancelButton($title, $backUrl=['index'], $options=[])
 	{
 		$buttons = static::beginTag('div', ['class'=>'btn-group', 'role'=>'group']);
 		$buttons .= static::submitButton('<i class="fa fa-check"></i> '.$title,
 			['class'=>'btn btn-success btn-approve']);
-		$buttons .= static::a('<i class="fa fa-reply"></i> Cancel', ['index'],
+		$buttons .= static::a('<i class="fa fa-reply"></i> Cancel', $backUrl,
 			['class'=>'btn btn-default', /*'onclick'=>new JsExpression('history.back()')*/]);
 		$buttons .= static::endTag('div');
 
