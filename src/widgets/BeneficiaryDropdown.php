@@ -37,7 +37,21 @@ class BeneficiaryDropdown extends Widget
 	/**
 	 * @var string $placeholder
 	 */
-	public $placeholder = 'Cari berdasarkan No Ktp, No PM, Nama Panggilan';
+	public $placeholder = '--- Pilih Penerima Manfaat ---';
+	/**
+	 * @var bool $enabled
+	 */
+	public $enabled = true;
+
+	protected $idValue;
+	protected $benef;
+
+	public function init()
+	{
+		parent::init();
+		$this->idValue = $this->model->{$this->attribute};
+		$this->benef = is_numeric($this->idValue) ? $this->model->beneficiary : null;
+	}
 
 	public function run()
 	{
@@ -46,32 +60,31 @@ class BeneficiaryDropdown extends Widget
 			'required'=>$this->model->isAttributeRequired($this->attribute),
 		]);
 		$dropdown = $this->getDropdown();
+		$summary = $this->getValueSummary();
 		$errorBlock = Html::error($this->model, $this->attribute, [
 			'class'=>'help-block error'
 		]);
 
 		if ($this->isHorizontal) {
-			echo $this->templateHorizontal($activeLabel, $dropdown, $errorBlock);
+			echo $this->templateHorizontal($activeLabel, $dropdown, $summary, $errorBlock);
 		} else {
-			echo $this->templateVertical($activeLabel, $dropdown, $errorBlock);
+			echo $this->templateVertical($activeLabel, $dropdown, $summary, $errorBlock);
 		}
 	}
 
 	protected function getDropdown()
 	{
-		$idValue = $this->model->{$this->attribute};
-		$options = $idValue ? [
-			'codeValue'=>$this->model->beneficiary->beneficiary_no,
-			'textValue'=>$this->model->beneficiary->full_name,
-		] : [];
+		$options = $this->getValueOptions();
 
 		return Select2::widget([
 			'model'=>$this->model,
 			'attribute'=>$this->attribute,
 			'options'=>[
 				'class'=>'bigdrop',
-				'prompt'=>$this->placeholder,
+				'placeholder'=>$this->placeholder,
+				'prompt'=>'Cari berdasarkan No Ktp, No PM, Nama Panggilan',
 			],
+			'disabled' => !$this->enabled,
 			'pluginOptions'=>Select2Options::toArray(ArrayHelper::merge($options, [
 				'url'=>$this->apiUrl,
 				'ajax.data'=>new JsExpression("function(params) { return {
@@ -128,35 +141,51 @@ class BeneficiaryDropdown extends Widget
 
           return jQuery('' + benef + '')
         }"),
-        'placeholder'=>$this->placeholder,
-        'idValue'=>$idValue,
+        'placeholder'=>'Cari berdasarkan No Ktp, No PM, Nama Panggilan',
+        'idValue'=>$this->idValue,
         'codeField'=>'beneficiary_no',
         'textField'=>'full_name',
-        'textValue'=>'full_name',
         'minLength'=>3,
 			])),
 		]);
 	}
 
-	protected function templateHorizontal($activeLabel, $dropdown, $errorBlock)
+	protected function getValueOptions()
+	{
+		return ($this->benef) ? [
+			'codeValue'=>$this->benef->beneficiary_no,
+			'textValue'=>$this->benef->full_name,
+		] : [];
+	}
+
+	protected function getValueSummary()
+	{
+		return ($this->benef)
+			? sprintf("%s - %s", $this->benef->beneficiary_no, $this->benef->full_name)
+			: null;
+	}
+
+	protected function templateHorizontal($activeLabel, $dropdown, $summary, $errorBlock)
 	{
 		?>
 		<div class="form-group">
 			<?= $activeLabel ?>
 			<div class="<?=$this->colspanText?>">
 				<?= $dropdown; ?>
+				<?= $summary; ?>
 				<?= $errorBlock ?>
 			</div>
 		</div>
 		<?php
 	}
 
-	protected function templateVertical($activeLabel, $dropdown, $errorBlock)
+	protected function templateVertical($activeLabel, $dropdown, $summary, $errorBlock)
 	{
 		?>
 		<div class="form-group">
 			<?= $activeLabel ?>
 			<?= $dropdown ?>
+			<?= $summary; ?>
 			<?= $errorBlock ?>
 		</div>
 		<?php
