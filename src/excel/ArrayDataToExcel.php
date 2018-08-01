@@ -128,7 +128,7 @@ class ArrayDataToExcel extends Component
 		}
 
 		// Save Output
-		$writer = new ExcelWriter($spreadsheet);
+		$writer = $this->createWriter($options['writer'], $spreadsheet);
 		$writer->save($output);
 	}
 
@@ -169,6 +169,8 @@ class ArrayDataToExcel extends Component
 			'cell_freezePane'=>'A2',
 			'data_rowHeight'=>20,
 			'data_verticalAlignment'=>Alignment::VERTICAL_CENTER,
+			// Writer Options
+			'writer'=>'Xls',
 		];
 	}
 
@@ -181,5 +183,23 @@ class ArrayDataToExcel extends Component
 		}
 
 		return $defOptions;
+	}
+
+	protected function validateWriter($item)
+	{
+		$validWriters = ['Csv', 'Html', 'Ods', 'Pdf', 'Xls', 'Xlsx'];
+		return in_array($item, $validWriters);
+	}
+
+	protected function createWriter($item, $spreadsheet)
+	{
+		$baseClass = 'PhpOffice\PhpSpreadsheet\Writer';
+		if ($this->validateWriter($item)) {
+			$className = "{$baseClass}\{$item}";
+		} else {
+			$className = "{$baseClass}\Xls";
+		}
+
+		return Yii::createObject($className, [$spreadsheet]);
 	}
 }
