@@ -70,14 +70,14 @@ class ArrayDataToExcel extends Component
 		unset($rangeStyle);
 
 		// Header Width
+		$worksheet->getColumnDimension($options['first_col'])->setWidth(4);
 		foreach ($this->headers as $header) {
-			$worksheet->getColumnDimension('A')->setWidth(4);
 			$worksheet->getColumnDimension($header['column'])->setWidth($header['width']);
 		}
 
 		// Header Title
+		$worksheet->setCellValue($options['first_cell'], $options['first_cell_label']);
 		foreach ($this->headers as $header) {
-			$worksheet->setCellValue('A1', 'No');
 			$worksheet->setCellValue($header['column'].'1', $header['title']);
 		}
 
@@ -87,14 +87,15 @@ class ArrayDataToExcel extends Component
 		// Other Variables
 		$a=2; $no=1;
 		$worksheet->getRowDimension($a)->setRowHeight($options['data_rowHeight']);
-		$rangeStyle = $worksheet->getStyle("A{$a}:".$options['column_lastChar']."{$a}");
+		$range = sprintf('%s%s:%s%s', $options['first_col'], $a, $options['column_lastChar'], $a);
+		$rangeStyle = $worksheet->getStyle($range);
 		$rangeStyle->getAlignment()->setWrapText(true);
 		$rangeStyle->getAlignment()->setVertical($options['data_verticalAlignment']);
 		$rangeStyle->applyFromArray($options['style_borderBottom']);
 
 		// Fill Data
 		foreach ($this->data as $row) {
-			$worksheet->setCellValue('A'.$a, $no);
+			$worksheet->setCellValue($options['first_col'].$a, $no);
 			foreach ($this->headers as $index => $header) {
 				$fieldname = $header['fieldname'];
 				$worksheet->setCellValue($header['column'].$a, $row[$fieldname]);
@@ -145,6 +146,10 @@ class ArrayDataToExcel extends Component
 			'lastModifiedBy'=>'IT Dev Team',
 			'filename_prepend'=>'Export Ipp',
 			'date_format'=>'Y-m-d_his',
+			// Cell Options
+			'first_col'=>'A',
+			'first_cell'=>'A1',
+			'first_cell_label'=>'No',
 			// Component Options
 			'style_fontBold'=>['font'=>['bold'=>true]],
 			'style_borderBottom'=>[
