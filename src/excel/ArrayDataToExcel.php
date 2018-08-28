@@ -195,9 +195,9 @@ class ArrayDataToExcel extends Component
 	{
 		$baseClass = 'PhpOffice\PhpSpreadsheet\Writer';
 		if ($this->validateWriter($item)) {
-			$className = "{$baseClass}\{$item}";
+			$className = "$baseClass\\$item";
 		} else {
-			$className = "{$baseClass}\Xls";
+			$className = "$baseClass\\Xls";
 		}
 
 		return \Yii::createObject($className, [$spreadsheet]);
