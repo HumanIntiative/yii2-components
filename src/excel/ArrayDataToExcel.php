@@ -200,6 +200,6 @@ class ArrayDataToExcel extends Component
 			$className = "{$baseClass}\Xls";
 		}
 
-		return Yii::createObject($className, [$spreadsheet]);
+		return \Yii::createObject($className, [$spreadsheet]);
 	}
 }
