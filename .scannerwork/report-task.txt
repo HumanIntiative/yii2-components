@@ -1,0 +1,7 @@
+organization=zmiftah-github
+projectKey=pkpudev_yii2-components
+serverUrl=https://sonarcloud.io
+serverVersion=7.4.0.17063
+dashboardUrl=https://sonarcloud.io/dashboard?id=pkpudev_yii2-components
+ceTaskId=AWX7gS3SHR8j8dJrX9zL
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWX7gS3SHR8j8dJrX9zL
