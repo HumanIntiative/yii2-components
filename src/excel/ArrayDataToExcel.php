@@ -58,7 +58,6 @@ class ArrayDataToExcel extends Component
 
 		// Set Footer
 		$worksheet->getHeaderFooter()
-			->addImage(new HeaderFooterDrawing, $options['header_imagePosition'])
 			->setOddHeader("&L&G&C&H".$options['company'])
 			->setOddFooter("&L&B".$options['title']."&RPage &P of &N");
 
@@ -163,7 +162,6 @@ class ArrayDataToExcel extends Component
 			'page_size'=>PageSetup::PAPERSIZE_A4,
 			'margin_left'=>0.3,
 			'margin_right'=>0,
-			'header_imagePosition'=>HeaderFooter::IMAGE_HEADER_LEFT,
 			'header_fillType'=>Fill::FILL_SOLID,
 			'header_fillColor'=>'EAEAEA',
 			'cell_freezePane'=>'A2',
