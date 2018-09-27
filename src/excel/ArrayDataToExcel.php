@@ -6,10 +6,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
-use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooterDrawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Writer\Xls as ExcelWriter;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use yii\base\Component;
 
 class ArrayDataToExcel extends Component
@@ -44,6 +42,7 @@ class ArrayDataToExcel extends Component
 
 		// Select Worksheet
 		$worksheet = $spreadsheet->getActiveSheet();
+		$worksheet->setTitle($options['first_sheet_name']);
 
 		// Page Setup
 		$worksheet->getPageSetup()
@@ -127,7 +126,7 @@ class ArrayDataToExcel extends Component
 		}
 
 		// Save Output
-		$writer = $this->createWriter($options['writer'], $spreadsheet);
+		$writer = $this->createWriter($spreadsheet, $options['writer']);
 		$writer->save($output);
 	}
 
@@ -145,6 +144,8 @@ class ArrayDataToExcel extends Component
 			'lastModifiedBy'=>'IT Dev Team',
 			'filename_prepend'=>'Export Ipp',
 			'date_format'=>'Y-m-d_his',
+			// Worksheet Options
+			'first_sheet_name'=>'Sheet1',
 			// Cell Options
 			'first_col'=>'A',
 			'first_cell'=>'A1',
@@ -189,15 +190,12 @@ class ArrayDataToExcel extends Component
 		return in_array($item, $validWriters);
 	}
 
-	protected function createWriter($item, $spreadsheet)
+	protected function createWriter($spreadsheet, $item='Xls')
 	{
-		$baseClass = 'PhpOffice\PhpSpreadsheet\Writer';
-		if ($this->validateWriter($item)) {
-			$className = "$baseClass\\$item";
-		} else {
-			$className = "$baseClass\\Xls";
+		if (!$this->validateWriter($item)) {
+			throw new \yii\base\InvalidConfigException("Writer type '{$item}' not found!", 400);
 		}
 
-		return \Yii::createObject($className, [$spreadsheet]);
+		return IOFactory::createWriter($spreadsheet, $item);
 	}
 }
