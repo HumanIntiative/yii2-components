@@ -104,7 +104,7 @@ class Select2Options extends BaseObject
 		$this->minimumInputLength = $config['minLength'] ?: 3;
 		/* templateResult */
 		$this->templateResult = $config['templateResult'] ?: new JsExpression("function(p) {
-			if (p.loading) {
+			if (p.id) {
 				return p.text
 			}
 			return jQuery('' + p.text + '')
