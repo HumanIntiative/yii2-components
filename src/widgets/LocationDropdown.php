@@ -91,7 +91,30 @@ class LocationDropdown extends Widget
 	 * @var bool $isHorizontal If you want to make it form horizontal
 	 */
 	public $isHorizontal = true;
-
+	/**
+	 * @var string $countryLabel label for Country
+	 */
+	public $countryLabel = "Negara";
+	/**
+	 * @var string $addressLabel label for Address
+	 */
+	public $addressLabel = "Alamat (<small>hanya menuliskan Nama jalan, No rumah, Rt/Rw</small>)";
+	/**
+	 * @var string $provinceLabel label for Province
+	 */
+	public $provinceLabel = "Provinsi";
+	/**
+	 * @var string $districtLabel label for District
+	 */
+	public $districtLabel = "Kota/Kabupaten";
+	/**
+	 * @var string $subdistrictLabel label for Sub-District
+	 */
+	public $subdistrictLabel = "Kecamatan";
+	/**
+	 * @var string $villageLabel label for Village
+	 */
+	public $villageLabel = "Kelurahan/Desa";
 	/**
 	 * @var string[] $dataLocation1 Array of options for location 1
 	 */
@@ -322,7 +345,7 @@ class LocationDropdown extends Widget
 			$isRequired = $this->model->isAttributeRequired($this->attributeCountry);
 
 			$dropdown = Html::beginTag('div', ['style'=>'padding-top:5px;']);
-			$dropdown .= 'Negara';
+			$dropdown .= $this->countryLabel;
 			$dropdown .= ($isRequired ? Html::tag('span', '*', ['class'=>'required']) : null);
 			$dropdown .= Html::endTag('div');
 			$dropdown .= Select2::widget([
@@ -342,7 +365,7 @@ class LocationDropdown extends Widget
 	protected function textAddress()
 	{
 		return Html::beginTag('div', ['style'=>'padding-top:5px;']) .
-				'Alamat (<small>hanya menuliskan Nama jalan, No rumah, Rt/Rw</small>)' .
+				$this->addressLabel .
 				($this->allRequired ? Html::tag('span', '*', ['class'=>'required']) : null) .
 			Html::endTag('div') .
 			Html::activeTextarea($this->model, $this->attributeAddress, array(
@@ -356,7 +379,7 @@ class LocationDropdown extends Widget
 	protected function selectProvince()
 	{
 		return Html::beginTag('div', ['class'=>'padding-top:5px;']) .
-				'Provinsi' .
+				$this->provinceLabel .
 				($this->allRequired ? Html::tag('span', '*', ['class'=>'required']) : null) .
 			Html::endTag('div') .
 			Select2::widget([
@@ -374,7 +397,7 @@ class LocationDropdown extends Widget
 	protected function selectDistrict()
 	{
 		return Html::beginTag('div', ['class'=>'padding-top:5px;']) .
-				'Kota/Kabupaten' .
+				$this->districtLabel .
 				($this->allRequired ? Html::tag('span', '*', ['class'=>'required']) : null) .
 			Html::endTag('div') .
 		 	Select2::widget([
@@ -392,7 +415,7 @@ class LocationDropdown extends Widget
 	protected function selectSubDistrict()
 	{
 		return Html::beginTag('div', ['class'=>'padding-top:5px;']) .
-				'Kecamatan' .
+				$this->subdistrictLabel .
 				($this->allRequired ? Html::tag('span', '*', ['class'=>'required']) : null) .
 			Html::endTag('div') .
 			Select2::widget([
@@ -410,7 +433,7 @@ class LocationDropdown extends Widget
 	protected function selectVillage()
 	{
 		return Html::beginTag('div', ['class'=>'padding-top:5px;']) .
-				'Kelurahan/Desa' .
+				$this->villageLabel .
 				($this->allRequired ? Html::tag('span', '*', ['class'=>'required']) : null) .
 			Html::endTag('div') .
 			Select2::widget([
