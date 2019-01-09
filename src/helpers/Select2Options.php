@@ -74,7 +74,7 @@ class Select2Options extends BaseObject
 		$textField = $config['textField'] ?: 'text';
 		$codeValue = $config['codeValue'];
 		// Sizzle bugfix
-		$textValue = str_replace(['(', ')', '.', '&', "'", '/'], null, $config['textValue']);
+		$textValue = str_replace(['(', ')', '.', '&', "'", '/', '"', '_'], null, $config['textValue']);
 		$placeholder = $config['placeholder'];
 
 		$callbackOptions = ($idValue = $config['idValue']) ?
