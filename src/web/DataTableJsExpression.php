@@ -2,6 +2,7 @@
 
 namespace pkpudev\components\web;
 
+use pkpudev\components\assets\DataTableAsset;
 use yii\base\BaseObject;
 use yii\web\View;
 
