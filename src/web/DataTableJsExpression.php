@@ -54,7 +54,7 @@ class DataTableJsExpression extends BaseObject
             var delIndex    = {$this->delIndex} || 0;
 
             // Fn definitions
-            var createdCallback = function() {
+            var createdCallback = function(row, data, index) {
                 {$this->createdCallback}
             };
             var addedCallback   = function() {
