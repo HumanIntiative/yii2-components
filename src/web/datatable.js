@@ -11,7 +11,9 @@ var fnCreatedRow = function ( row, data, index ) {
     }
     jQuery('td', row).eq(delIndex).addClass('kv-align-center kv-align-middle')
 
-    setTimeout(createdCallback(row, data, index), 50);
+    setTimeout(function(){
+        createdCallback(row, data, index)
+    }, 50);
 };
 var varTable = jQuery( divSelector + ' table.kv-grid-table' ).DataTable({
     'dom': 't',
