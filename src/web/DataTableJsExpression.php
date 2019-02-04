@@ -52,7 +52,7 @@ class DataTableJsExpression extends BaseObject
             var addSelector = '{$this->addSelector}';
             var delSelector = '{$this->delSelector}';
             var delIndex    = {$this->delIndex} || 0;
-            var irand       = {$irand} || 0;
+            // var irand       = {$irand} || 0;
             var varTable    = [];
             var varRowTable = [];
 
@@ -68,6 +68,7 @@ class DataTableJsExpression extends BaseObject
             };
         JS;
         $jsScript .= file_get_contents(__DIR__.'/datatable.js');
+        $jsScript = str_replace('irand', $irand, $jsScript);
 
         $this->view->registerJs($jsScript, View::POS_READY, "tabular-input-js{$irand}");
     }
