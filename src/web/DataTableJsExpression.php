@@ -67,6 +67,7 @@ class DataTableJsExpression extends BaseObject
         $jsScript .= file_get_contents(__DIR__.'/datatable.js');
         $jsScript = str_replace('varTable', "varTable{$irand}", $jsScript);
         $jsScript = str_replace('varRowTable', "varRowTable{$irand}", $jsScript);
+        $jsScript = str_replace('delIndex', "delIndex{$irand}", $jsScript);
 
         $this->view->registerJs($jsScript, View::POS_READY, "tabular-input-js{$irand}");
     }
