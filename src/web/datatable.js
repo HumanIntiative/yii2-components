@@ -15,18 +15,22 @@ var fnCreatedRow = function ( row, data, index ) {
         createdCallback(row, data, index)
     }, 50);
 };
-var varTable = jQuery( divSelector + ' table.kv-grid-table' ).DataTable({
+
+// Begin
+varTable[irand] = jQuery( divSelector + ' table.kv-grid-table' ).DataTable({
     'dom': 't',
     'ordering': false,
     'paging': false,
     'createdRow': fnCreatedRow
 });
-var varRowTable = varTable.row( divSelector + ' tr.kv-tabform-row:first-child' );
+varRowTable[irand] = varTable[irand].row( divSelector + ' tr.kv-tabform-row:first-child' );
+// End
+
 var fnInputClearValue = function(match, p1, p2, p3, offset, string) {
     return '<'+[p1, 'value=\"\"', p3].join(' ')+'>';
 };
 var fnAddingRow = function (e) {
-    var columns = varRowTable.data(),
+    var columns = varRowTable[irand].data(),
         replacer = 'value=\"\"',
         regexInputId = /\<(input type=\"hidden\".*)value=\"([^\"]*)\"\>/g,
         regexInputIdAlt = /\<(input.*)value=\"([^\"]*)\" (type=\"hidden\")\>/g,
@@ -67,11 +71,11 @@ var fnAddingRow = function (e) {
             columns[i] = columns[i].replace(regexInputAlt, fnInputClearValue)
         }
     }
-    varTable.row.add( columns ).draw( false )
+    varTable[irand].row.add( columns ).draw( false )
 };
 var fnDeletingRow = function(e) {
     e.preventDefault()
-    varTable.row( $(this).parents('tr') ).remove().draw()
+    varTable[irand].row( $(this).parents('tr') ).remove().draw()
 }
 
 // Events

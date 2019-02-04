@@ -52,6 +52,9 @@ class DataTableJsExpression extends BaseObject
             var addSelector = '{$this->addSelector}';
             var delSelector = '{$this->delSelector}';
             var delIndex    = {$this->delIndex} || 0;
+            var irand       = {$irand} || 0;
+            var varTable    = [];
+            var varRowTable = [];
 
             // Fn definitions
             var createdCallback = function(row, data, index) {
