@@ -23,7 +23,7 @@ class DateTimeHelper extends BaseObject
 	 * @param integer $days
 	 * @return DateTime[]
 	 */
-	private static function getWorkDays(\DateTimeInterface $start, $days=7)
+	private static function getWorkDays(\DateTimeInterface $start, $days=35)
 	{
 		$dates = [];
 		$interval = new \DateInterval('P1D');
