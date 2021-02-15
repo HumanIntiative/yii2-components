@@ -5,8 +5,9 @@
     "type": "yii2-extension",
     "require": {
         "php": ">= 5.6",
-        "kartik-v/yii2-widget-select2": "@dev",
-        "creocoder/yii2-flysystem": "0.8.*"
+        "yidas/yii2-bower-asset": "*",
+        "kartik-v/yii2-widget-select2": "v2.2.0",
+        "creocoder/yii2-flysystem": "1.0.*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
