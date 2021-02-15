@@ -90,10 +90,10 @@ class FileUploader extends Component
             $stream = fopen($uploaded->tempName, 'r+');
             $filename = "{$prefix}_{$uploaded->name}";
             $fullpath = "{$this->targetDir}/{$filename}";
-            $result = $this->fileSystem->putStream($fullpath, $stream); //write or update
+            $result = $this->fileSystem->writeStream($fullpath, $stream); //write or update
             fclose($stream);
 
-            if ($retval = $this->fileSystem->has($fullpath)) {
+            if ($retval = $this->fileSystem->fileExists($fullpath)) {
                 $retval = $fileModel->saveFile($uploaded, $filename, $this->targetDir, $this->type);
             } else {
                 throw new ServerErrorHttpException("Gagal menyimpan file", 500);
