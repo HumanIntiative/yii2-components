@@ -5,13 +5,12 @@
     "type": "yii2-extension",
     "require": {
         "php": ">= 5.6",
-        "yidas/yii2-bower-asset": "*",
         "kartik-v/yii2-widget-select2": "v2.2.0",
         "creocoder/yii2-flysystem": "1.0.*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
-        "wimg/php-compatibility": "*"
+        "phpcompatibility/php-compatibility": "*"
     },
     "license": "MIT",
     "authors": [
@@ -20,13 +19,19 @@
             "email": "zeinmiftah@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "pkpudev\\components\\": "src/"
         }
     },
     "scripts": {
-        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wimg/php-compatibility",
-        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wimg/php-compatibility"
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility"
     }
 }
