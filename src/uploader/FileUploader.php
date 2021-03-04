@@ -60,8 +60,22 @@ class FileUploader extends Component
             $this->isValid = $file instanceof UploadedFile;
         } else {
             $this->files = UploadedFile::getInstances($this->model, $this->attribute);
+            $this->files = $this->validateArray($this->files);
             $this->isValid = is_array($this->files) && ($this->files[0] instanceof UploadedFile);
         }
+    }
+
+    public function setFiles($files)
+    {
+        $this->files = $this->validateArray($files);
+        $this->isValid = is_array($this->files) && ($this->files[0] instanceof UploadedFile);
+    }
+
+    protected function validateArray($array)
+    {
+        return array_filter($array, function ($f) { 
+            return $f instanceof UploadedFile;
+        });
     }
 
     /**
