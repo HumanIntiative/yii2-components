@@ -4,10 +4,10 @@
     "keywords": ["yii2", "extension", "components", "widgets"],
     "type": "yii2-extension",
     "require": {
-        "php": ">= 7.1",
+        "php": ">= 7.2",
         "kartik-v/yii2-widget-select2": "v2.2.0",
         "creocoder/yii2-flysystem": "1.0.*",
-        "phpoffice/phpspreadsheet": "1.12.*"
+        "phpoffice/phpspreadsheet": "1.16.*"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "2.*",
