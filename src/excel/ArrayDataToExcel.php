@@ -2,200 +2,240 @@
 
 namespace pkpudev\components\excel;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Yii;
 use yii\base\Component;
 
 class ArrayDataToExcel extends Component
 {
-	public $headers = [];
-	public $data = [];
-	public $options = [];
+    public $headers = [];
+    public $data = [];
+    public $options = [];
 
-	public function init()
-	{
-		// ini_set('memory_limit', '512M');
-		parent::init();
-	}
+    /**
+     * @var Worksheet $worksheet
+     */
+    protected $worksheet;
+    /**
+     * @var Spreadsheet $spreadsheet
+     */
+    protected $spreadsheet;
 
-	public function create($saveAsFile=true, $filename=null)
-	{
-		// Get Options
-		$options = $this->mergeOptions($this->options);
+    public function init()
+    {
+        // ini_set('memory_limit', '512M');
+        parent::init();
 
-		// Create Instance
-		$spreadsheet = new Spreadsheet();
+        // Get Options
+        $options = $this->mergeOptions($this->options);
 
-		// Set properties
-		$spreadsheet->getProperties()
-			->setCreator($options['creator'])
-			->setLastModifiedBy($options['lastModifiedBy'])
-			->setTitle($options['title'])
-			->setSubject($options['subject'])
-			->setDescription($options['desc'])
-			->setKeywords($options['keywords'])
-			->setCategory($options['category']);
+        // Create Instance
+        $this->spreadsheet = new Spreadsheet();
 
-		// Select Worksheet
-		$worksheet = $spreadsheet->getActiveSheet();
-		$worksheet->setTitle($options['first_sheet_name']);
+        // Set properties
+        $this->spreadsheet->getProperties()
+            ->setCreator($options['creator'])
+            ->setLastModifiedBy($options['lastModifiedBy'])
+            ->setTitle($options['title'])
+            ->setSubject($options['subject'])
+            ->setDescription($options['desc'])
+            ->setKeywords($options['keywords'])
+            ->setCategory($options['category']);
 
-		// Page Setup
-		$worksheet->getPageSetup()
-			->setOrientation($options['page_orientation'])
-			->setPaperSize($options['page_size'])
-			->setRowsToRepeatAtTopByStartAndEnd(1, 2);
+        // Select Worksheet
+        $this->worksheet = $this->spreadsheet->getActiveSheet();
+        $this->worksheet->setTitle($options['first_sheet_name']);
 
-		// Page Margins
-		$worksheet->getPageMargins()
-			->setRight($options['margin_right'])
-			->setLeft($options['margin_left']);
+        // Page Setup
+        $this->worksheet->getPageSetup()
+            ->setOrientation($options['page_orientation'])
+            ->setPaperSize($options['page_size'])
+            ->setRowsToRepeatAtTopByStartAndEnd(1, 2);
 
-		// Set Footer
-		$worksheet->getHeaderFooter()
-			->setOddHeader("&L&G&C&H".$options['company'])
-			->setOddFooter("&L&B".$options['title']."&RPage &P of &N");
+        // Page Margins
+        $this->worksheet->getPageMargins()
+            ->setRight($options['margin_right'])
+            ->setLeft($options['margin_left']);
 
-		// Range Style
-		$rangeStyle = $worksheet->getStyle($options['style_fillRange']);
-		$rangeStyle->applyFromArray($options['style_fontBold']);
-		$rangeStyle->getFill()->setFillType($options['header_fillType']);
-		$rangeStyle->getFill()->getStartColor()->setRGB($options['header_fillColor']);
-		unset($rangeStyle);
+        // Set Footer
+        $this->worksheet->getHeaderFooter()
+            ->setOddHeader("&L&G&C&H" . $options['company'])
+            ->setOddFooter("&L&B" . $options['title'] . "&RPage &P of &N");
 
-		// Header Width
-		$worksheet->getColumnDimension($options['first_col'])->setWidth(4);
-		foreach ($this->headers as $header) {
-			$worksheet->getColumnDimension($header['column'])->setWidth($header['width']);
-		}
+        // Range Style
+        $rangeStyle = $this->worksheet->getStyle($options['style_fillRange']);
+        $rangeStyle->applyFromArray($options['style_fontBold']);
+        $rangeStyle->getFill()->setFillType($options['header_fillType']);
+        $rangeStyle->getFill()->getStartColor()->setRGB($options['header_fillColor']);
+        unset($rangeStyle);
 
-		// Header Title
-		$worksheet->setCellValue($options['first_cell'], $options['first_cell_label']);
-		foreach ($this->headers as $header) {
-			$worksheet->setCellValue($header['column'].'1', $header['title']);
-		}
+        // Header Width
+        $this->worksheet->getColumnDimension($options['first_col'])->setWidth(4);
+        foreach ($this->headers as $header) {
+            $this->worksheet->getColumnDimension($header['column'])->setWidth($header['width']);
+        }
 
-		// Freeze panes
-		$worksheet->freezePane($options['cell_freezePane']);
+        // Header Title
+        $firstRow = (int) $options['first_row'];
+        $firstCell = $options['first_col'] . $firstRow;
+        $this->worksheet->setCellValue($firstCell, $options['first_cell_label']);
+        foreach ($this->headers as $header) {
+            $this->worksheet->setCellValue($header['column'] . $firstRow, $header['title']);
+        }
 
-		// Other Variables
-		$a=2; $no=1;
-		$worksheet->getRowDimension($a)->setRowHeight($options['data_rowHeight']);
-		$range = sprintf('%s%s:%s%s', $options['first_col'], $a, $options['column_lastChar'], $a);
-		$rangeStyle = $worksheet->getStyle($range);
-		$rangeStyle->getAlignment()->setWrapText(true);
-		$rangeStyle->getAlignment()->setVertical($options['data_verticalAlignment']);
-		$rangeStyle->applyFromArray($options['style_borderBottom']);
+        // Freeze panes
+        $this->worksheet->freezePane($options['cell_freezePane']);
 
-		// Fill Data
-		foreach ($this->data as $row) {
-			$worksheet->setCellValue($options['first_col'].$a, $no);
-			foreach ($this->headers as $index => $header) {
-				$fieldname = $header['fieldname'];
-				$worksheet->setCellValue($header['column'].$a, $row[$fieldname]);
-			}
-			$a++; $no++;
-		}
+        // Other Variables
+        $a = $firstRow + 1;
+        $no = 1;
+        $this->worksheet->getRowDimension($a)->setRowHeight($options['data_rowHeight']);
+        $range = sprintf('%s%s:%s%s', $options['first_col'], $a, $options['column_lastChar'], $a);
+        $rangeStyle = $this->worksheet->getStyle($range);
+        $rangeStyle->getAlignment()->setWrapText(true);
+        $rangeStyle->getAlignment()->setVertical($options['data_verticalAlignment']);
+        $rangeStyle->applyFromArray($options['style_borderBottom']);
 
-		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-		$spreadsheet->setActiveSheetIndex(0);
-		$today = date($options['date_format']);
+        // Fill Data
+        foreach ($this->data as $row) {
+            $this->worksheet->setCellValue($options['first_col'] . $a, $no);
+            foreach ($this->headers as $index => $header) {
+                $fieldname = $header['fieldname'];
+                $this->worksheet->setCellValue($header['column'] . $a, $row[$fieldname]);
+            }
+            $a++;
+            $no++;
+        }
 
-		if (is_null($filename))
-			$filename = "{$options[filename_prepend]} {$today}.xls";
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $this->spreadsheet->setActiveSheetIndex(0);
+    }
 
-		if ($saveAsFile) {
-			$output = $filename;
-		} else {
-			// Redirect output to a client's web browser (Excel5)
-			header("Content-Type: application/vnd.ms-excel");
-			header("Content-Disposition: attachment;filename=\"{$filename}\"");
-			header("Cache-Control: max-age=0");
-			// If you're serving to IE 9, then the following may be needed
-			header('Cache-Control: max-age=1');
-			// If you're serving to IE over SSL, then the following may be needed
-			header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-			header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-			header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-			header ('Pragma: public'); // HTTP/1.0
-			$output = 'php://output';
-		}
+    public function create($saveAsFile = true, $filename = null)
+    {
+        $dateFormatOption = $this->options['date_format'] ?? $this->defaultOptions['date_format'];
+        $filenamePrependOption = $this->options['filename_prepend'] ?? $this->defaultOptions['filename_prepend'];
+        $writerOption = $this->options['writer'] ?? $this->defaultOptions['writer'];
 
-		// Save Output
-		$writer = $this->createWriter($spreadsheet, $options['writer']);
-		$writer->save($output);
-	}
+        $today = date($dateFormatOption);
 
-	protected function getDefaultOptions()
-	{
-		return [
-			// General Options
-			'company'=>'PKPU - Lembaga Kemanusiaan Nasional.',
-			'creator'=>'IT Dev',
-			'title'=>'Download - Mulia Project v2',
-			'subject'=>null,
-			'desc'=>null,
-			'keywords'=>null,
-			'category'=>'Download',
-			'lastModifiedBy'=>'IT Dev Team',
-			'filename_prepend'=>'Export Ipp',
-			'date_format'=>'Y-m-d_his',
-			// Worksheet Options
-			'first_sheet_name'=>'Sheet1',
-			// Cell Options
-			'first_col'=>'A',
-			'first_cell'=>'A1',
-			'first_cell_label'=>'No',
-			// Component Options
-			'style_fontBold'=>['font'=>['bold'=>true]],
-			'style_borderBottom'=>[
-				'borders'=>[
-					'bottom'=>['style'=>Border::BORDER_THIN, 'color'=>['argb'=>'F555753']],
-				],
-			],
-			'style_fillRange'=>'A1:BP1',
-			'column_lastChar'=>'BP',
-			'page_orientation'=>PageSetup::ORIENTATION_LANDSCAPE,
-			'page_size'=>PageSetup::PAPERSIZE_A4,
-			'margin_left'=>0.3,
-			'margin_right'=>0,
-			'header_fillType'=>Fill::FILL_SOLID,
-			'header_fillColor'=>'EAEAEA',
-			'cell_freezePane'=>'A2',
-			'data_rowHeight'=>20,
-			'data_verticalAlignment'=>Alignment::VERTICAL_CENTER,
-			// Writer Options
-			'writer'=>'Xls',
-		];
-	}
+        if (is_null($filename)) {
+            $filename = "{$filenamePrependOption} {$today}.xls";
+        }
 
-	protected function mergeOptions()
-	{
-		$defOptions = $this->defaultOptions;
+        if ($saveAsFile) {
+            $output = $filename;
+        } else {
+            $response = Yii::$app->response;
+            $headers = $response->headers;
+            // Redirect output to a client's web browser (Excel5)
+            $headers->set('Content-Type', 'application/vnd.ms-excel');
+            $headers->set('Content-Disposition', 'attachment;filename="' . $filename . '"');
+            $headers->set('Cache-Control', 'max-age=0');
+            // If you're serving to IE 9, then the following may be needed
+            // header('Cache-Control: max-age=1');
+            // If you're serving to IE over SSL, then the following may be needed
+            // header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+            // header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+            // header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+            // header('Pragma: public'); // HTTP/1.0
+            $output = 'php://output';
+        }
 
-		foreach ($this->options as $optK => $optV) {
-			$defOptions[$optK] = $optV;
-		}
+        // Save Output
+        $writer = $this->createWriter($this->spreadsheet, $writerOption);
+        ob_start();
+        $writer->save($output);
+        $content = ob_get_clean();
+        return $content;
+    }
 
-		return $defOptions;
-	}
+    public function getSpreadsheet()
+    {
+        return $this->spreadsheet;
+    }
 
-	protected function validateWriter($item)
-	{
-		$validWriters = ['Csv', 'Html', 'Ods', 'Pdf', 'Xls', 'Xlsx'];
-		return in_array($item, $validWriters);
-	}
+    public function getWorksheet()
+    {
+        return $this->worksheet;
+    }
 
-	protected function createWriter($spreadsheet, $item='Xls')
-	{
-		if (!$this->validateWriter($item)) {
-			throw new \yii\base\InvalidConfigException("Writer type '{$item}' not found!", 400);
-		}
+    //
+    //
 
-		return IOFactory::createWriter($spreadsheet, $item);
-	}
+    protected function getDefaultOptions()
+    {
+        return [
+            // General Options
+            'company' => 'PKPU - Lembaga Kemanusiaan Nasional.',
+            'creator' => 'IT Dev',
+            'title' => 'Download - Mulia Project v2',
+            'subject' => null,
+            'desc' => null,
+            'keywords' => null,
+            'category' => 'Download',
+            'lastModifiedBy' => 'IT Dev Team',
+            'filename_prepend' => 'Export Ipp',
+            'date_format' => 'Y-m-d_his',
+            // Worksheet Options
+            'first_sheet_name' => 'Sheet1',
+            // Cell Options
+            'first_col' => 'A',
+            'first_row' => 1,
+            'first_cell' => 'A1',
+            'first_cell_label' => 'No',
+            // Component Options
+            'style_fontBold' => ['font' => ['bold' => true]],
+            'style_borderBottom' => [
+                'borders' => [
+                    'bottom' => ['style' => Border::BORDER_THIN, 'color' => ['argb' => 'F555753']],
+                ],
+            ],
+            'style_fillRange' => 'A1:BP1',
+            'column_lastChar' => 'BP',
+            'page_orientation' => PageSetup::ORIENTATION_LANDSCAPE,
+            'page_size' => PageSetup::PAPERSIZE_A4,
+            'margin_left' => 0.3,
+            'margin_right' => 0,
+            'header_fillType' => Fill::FILL_SOLID,
+            'header_fillColor' => 'EAEAEA',
+            'cell_freezePane' => 'A2',
+            'data_rowHeight' => 20,
+            'data_verticalAlignment' => Alignment::VERTICAL_CENTER,
+            // Writer Options
+            'writer' => 'Xls',
+        ];
+    }
+
+    protected function mergeOptions()
+    {
+        $defOptions = $this->defaultOptions;
+
+        foreach ($this->options as $optK => $optV) {
+            $defOptions[$optK] = $optV;
+        }
+
+        return $defOptions;
+    }
+
+    protected function validateWriter($item)
+    {
+        $validWriters = ['Csv', 'Html', 'Ods', 'Pdf', 'Xls', 'Xlsx'];
+        return in_array($item, $validWriters);
+    }
+
+    protected function createWriter($spreadsheet, $item = 'Xls')
+    {
+        if (!$this->validateWriter($item)) {
+            throw new \yii\base\InvalidConfigException("Writer type '{$item}' not found!", 400);
+        }
+
+        return IOFactory::createWriter($spreadsheet, $item);
+    }
 }
