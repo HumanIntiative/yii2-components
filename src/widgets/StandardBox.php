@@ -39,12 +39,22 @@ class StandardBox extends \yii\base\Widget
      * @var bool $isCollapse
      */
     public $isCollapse = false;
+    /**
+     * @var bool $isResponsive
+     */
+    public $isResponsive = false;
 
     public function init()
     {
-        if (!$this->visible) return; 
-        if (!empty($this->footer)) $this->withFooter = true;
-        $classCollapse = $this->isCollapse ? 'collapsed-box' : null; ?>
+        if (!$this->visible) {
+            return;
+        }
+
+        if (!empty($this->footer)) {
+            $this->withFooter = true;
+        }
+
+        $classCollapse = $this->isCollapse ? 'collapsed-box' : null;?>
 
         <div class="box <?=$this->boxType?> <?=$classCollapse?>">
             <?php if (!empty($this->title)): ?>
@@ -55,25 +65,29 @@ class StandardBox extends \yii\base\Widget
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <!-- <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button> -->
                 </div>
-                <?php endif ?>
+                <?php endif?>
             </div><!-- /.box-header -->
-            <?php endif ?>
+            <?php endif?>
             <div class="box-body">
+                <?php if ($this->isResponsive): ?>
                 <div class="table-responsive">
+                <?php endif?>
         <?php
-    }
+}
 
     public function run()
     {
         ?>
+                <?php if ($this->isResponsive): ?>
                 </div><!-- /.table-responsive -->
+                <?php endif?>
             </div><!-- /.box-body -->
             <?php if ($this->withFooter): ?>
             <div class="box-footer clearfix">
                 <?php echo $this->footer; ?>
             </div><!-- /.box-footer -->
-            <?php endif ?>
+            <?php endif?>
         </div>
         <?php
-    }
+}
 }
